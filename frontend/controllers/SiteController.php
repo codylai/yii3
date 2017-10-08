@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -12,6 +13,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use app\models\UserForm;
 
 /**
  * Site controller
@@ -210,4 +212,32 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
+
+    public function actionHello()
+    {
+        $name = "John";
+        return $this->render('hello',array('name'=>$name));
+    }
+
+
+
+
+    public function actionUser(){
+
+        $model = new UserForm();
+
+        if($model->load(Yii::$app->request->post()) && $model->validate()){
+            Yii::$app->session->setFlash('success','You have entered the data correctly');
+            //return $this->goBack();
+            //return $this->render('hello',array('name'=>$name));
+        }
+
+        return $this->render('UserForm',['model'=>$model]);
+
+    }
+
 }
+
+
+
