@@ -4,9 +4,11 @@ namespace frontend\controllers;
 use Yii;
 use frontend\models\Post;
 use frontend\models\PostSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
 
 /**
  * PostController implements the CRUD actions for Post model.
@@ -19,6 +21,30 @@ class PostController extends Controller
     public function behaviors()
     {
         return [
+
+/*
+            'access' => [
+                'class'=>AccessControl::className(),
+                'only'=>['create','update'],
+                'rules'=>[
+                    'allow'=>true,
+                    'roles'=>['@']
+                ]
+            ],
+*/
+
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['create', 'update'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+
+
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -36,6 +62,11 @@ class PostController extends Controller
     {
         $searchModel = new PostSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        //change post sorting sequence
+        $dataProvider->setSort([
+            'defaultOrder' => [ 'post_description' => SORT_ASC],
+        ]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
